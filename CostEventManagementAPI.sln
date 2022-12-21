@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostEventManagementAPI", "CostEventManagementAPI\CostEventManagementAPI.csproj", "{ACE821B7-12EA-4043-B95D-BF14F6C2D062}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CostEventManagementAPI", "CostEventManagementAPI\CostEventManagementAPI.csproj", "{ACE821B7-12EA-4043-B95D-BF14F6C2D062}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostEventManegement.DatabaseModule", "DatabaseModule\CostEventManegement.DatabaseModule.csproj", "{70F1B7FB-B84F-460E-B936-DBAE58650D03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostEventManegement.AuthModule", "AuthModule\CostEventManegement.AuthModule.csproj", "{6BAC93A8-A41A-4191-B130-9CE9A2C783C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostEventManegement.EventModule", "EventModule\CostEventManegement.EventModule.csproj", "{93C73896-DB08-4DC0-B654-B7E7D26A2C9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{ACE821B7-12EA-4043-B95D-BF14F6C2D062}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACE821B7-12EA-4043-B95D-BF14F6C2D062}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACE821B7-12EA-4043-B95D-BF14F6C2D062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70F1B7FB-B84F-460E-B936-DBAE58650D03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F1B7FB-B84F-460E-B936-DBAE58650D03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F1B7FB-B84F-460E-B936-DBAE58650D03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F1B7FB-B84F-460E-B936-DBAE58650D03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BAC93A8-A41A-4191-B130-9CE9A2C783C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BAC93A8-A41A-4191-B130-9CE9A2C783C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BAC93A8-A41A-4191-B130-9CE9A2C783C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BAC93A8-A41A-4191-B130-9CE9A2C783C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93C73896-DB08-4DC0-B654-B7E7D26A2C9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93C73896-DB08-4DC0-B654-B7E7D26A2C9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93C73896-DB08-4DC0-B654-B7E7D26A2C9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93C73896-DB08-4DC0-B654-B7E7D26A2C9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

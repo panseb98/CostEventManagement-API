@@ -7,7 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Modules\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AuthModule\CostEventManegement.AuthModule.csproj" />
+    <ProjectReference Include="..\DatabaseModule\CostEventManegement.DatabaseModule.csproj" />
+    <ProjectReference Include="..\EventModule\CostEventManegement.EventModule.csproj" />
   </ItemGroup>
 
 </Project>

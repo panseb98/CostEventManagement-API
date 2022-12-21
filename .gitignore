@@ -1,6 +1,12 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Compiled output
+/AuthModule/bin
+/AuthModule/obj
+/EventModule/obj
+/EventModule/bin
+/DatabaseModule/obj
+/DatabaseModule/bin
 /CostEventManagementAPI/obj
 /CostEventManagementAPI/bin
 /.vs
