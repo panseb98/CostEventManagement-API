@@ -8,5 +8,8 @@ namespace CostEventManegement.EventModule.Models
 {
     public class SettleUserEvent
     {
+        public int EventId { get; set; }
+        public int FirstUserId { get; set; }
+        public int SecondUserId { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace CostEventManegement.EventModule.Services
     public interface IEventService
     {
         public Task<List<CurrencyDTO>> GetCurrencies();
-        public Task<int> AddEvent(EventDTO eventModel);
+        public Task<int> AddEvent(EventDTO eventModel, int userId);
         public Task<EventVM> GetEvent(int id, int userId);
         public Task<List<EventDTO>> GetUserEvents(int userId);
         public Task AddCost(CostDTO costDTO);

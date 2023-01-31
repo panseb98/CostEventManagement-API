@@ -48,7 +48,7 @@ namespace CostEventManegement.EventModule.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> AddEvent(EventDTO eventModel)
+        public async Task<int> AddEvent(EventDTO eventModel, int userId)
         {
             var newEvent = new Event()
             {
@@ -58,7 +58,8 @@ namespace CostEventManegement.EventModule.Services
                     .ToString()
                     .Substring(0, 7)
                     .Replace("-", "")
-                    .ToUpper()
+                    .ToUpper(),
+                EventUsers = new List<EventUser>() { new EventUser() { UserId = userId } }
             };
 
             await _context.Events.AddAsync(newEvent);
@@ -164,7 +165,13 @@ namespace CostEventManegement.EventModule.Services
 
         public void SettleUser(SettleUserEvent settleUserModel)
         {
-            throw new NotImplementedException();
+            var firstCostsToRemove = _context.UserCosts.Include(x => x.Cost).Where(x => x.Cost.EventId == settleUserModel.EventId && x.DebtorId == settleUserModel.FirstUserId && x.PayerId == settleUserModel.SecondUserId);
+            _context.RemoveRange(firstCostsToRemove);
+
+            var secondCostsToRemove = _context.UserCosts.Include(x => x.Cost).Where(x => x.Cost.EventId == settleUserModel.EventId && x.DebtorId == settleUserModel.SecondUserId && x.PayerId == settleUserModel.FirstUserId);
+            _context.RemoveRange(secondCostsToRemove);
+
+            _context.SaveChangesAsync();
         }
 
         public async Task<double> GetCurrentCurrenciesExchange(int fromCurrencyId, int toCurrencyId)

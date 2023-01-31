@@ -25,7 +25,7 @@ namespace CostEventManagementAPI.Controllers
         [HttpPost("AddEvent")]
         public async Task<int> AddEvent(EventDTO eventModel)
         {
-            return await _eventSerice.AddEvent(eventModel);
+            return await _eventSerice.AddEvent(eventModel, GetUserId());
         }
 
         [HttpPost("AddCost")]
