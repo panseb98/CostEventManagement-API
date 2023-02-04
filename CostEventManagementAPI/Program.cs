@@ -7,8 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var aaa = builder.Configuration.GetConnectionString("Database");
 // Add services to the container.
+IWebHostEnvironment environment = builder.Environment;
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -57,7 +58,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseHttpsRedirection();
-
+app.UseCors("AllOrigins");
 app.UseAuthorization();
 
 app.MapControllers();
