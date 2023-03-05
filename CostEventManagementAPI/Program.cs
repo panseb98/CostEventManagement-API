@@ -45,10 +45,32 @@ builder.Services.AddCors(options =>
 });
 
 
+string connectionString;
 
+if (builder.Environment.IsProduction())
+{
+    string connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+    var databaseUri = new Uri(connectionUrl);
+
+    string db = databaseUri.LocalPath.TrimStart('/');
+    string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
+
+    connectionString = builder.Configuration.GetConnectionString("Database")
+                .Replace("<userId>", userInfo[0])
+                .Replace("<password>", userInfo[1])
+                .Replace("<host>", databaseUri.Host)
+                .Replace("<port>", databaseUri.Port.ToString())
+                .Replace("<db>", db);
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("Database");
+}
 builder.Services.AddDbContext<ApiDbContext>(
-    o => o.UseNpgsql(builder.Configuration.GetConnectionString("Database"))
+    o => o.UseNpgsql(connectionString)
     );
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +78,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    
 }
 //app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseHttpsRedirection();
