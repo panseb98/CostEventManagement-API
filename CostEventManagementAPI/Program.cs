@@ -33,16 +33,17 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllOrigins",
-        builder =>
-        {
-            builder.AllowAnyHeader()
-                           .AllowAnyOrigin()
-                          .AllowAnyMethod();
-        });
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://panseb98.github.io", "http://localhost:4200").AllowAnyMethod().AllowAnyHeader(); ;
+                      });
 });
+
 
 
 builder.Services.AddDbContext<ApiDbContext>(
@@ -56,9 +57,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+//app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseHttpsRedirection();
-app.UseCors("AllOrigins");
+app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
 
 app.MapControllers();

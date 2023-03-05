@@ -32,7 +32,7 @@ namespace CostEventManegement.EventModule.Services
                 costDTO.CurrencyId = eventModel.DefaultCurrencyId;
             }
 
-            var individualCost = costDTO.Value / costDTO.Users.Count + 1;
+            var individualCost = costDTO.Value / (costDTO.Users.Count + 1);
             var dbCost = new Cost()
             {
                 EventId = costDTO.EventId,
@@ -108,8 +108,8 @@ namespace CostEventManegement.EventModule.Services
 
             var userCosts = await _context.Costs.Include(x => x.UserCosts).Include(x => x.Currency).Where(x => x.EventId == id).ToListAsync();
 
-            var costsOnPlus = userCosts.SelectMany(x => x.UserCosts).Where(x => x.PayerId == id);
-            var costsOnMinus = userCosts.SelectMany(x => x.UserCosts).Where(x => x.DebtorId == id);
+            var costsOnPlus = userCosts.SelectMany(x => x.UserCosts).Where(x => x.PayerId == userId);
+            var costsOnMinus = userCosts.SelectMany(x => x.UserCosts).Where(x => x.DebtorId == userId);
 
             var dictionaryCost = new Dictionary<int, double>();
 
@@ -118,11 +118,12 @@ namespace CostEventManegement.EventModule.Services
                 Name = userEvent.Name,
                 Code = userEvent.Code,
                 DefaultCurrencyId = userEvent.DefaultCurrencyId,
-                Users = userEvent.EventUsers.Select(x => new UserBalanceVM()
-                { Id = x.UserId,
+                Users = userEvent.EventUsers.Where(x => x.UserId != userId).Select(x => new UserBalanceVM()
+                {
+                    Id = x.UserId,
                     Name = x.User.Name + " " + x.User.Surname
                 }).ToList(),
-                Costs = userCosts.Where(x => x.PayerId == id).Select(x => new CostDTO() { Name = x.Name, Value = x.Value }).ToList()
+                Costs = userCosts.Select(x => new CostDTO() { Name = x.Name, Value = x.Value }).ToList()
             };
 
             foreach (var cost in costsOnPlus)
@@ -130,7 +131,7 @@ namespace CostEventManegement.EventModule.Services
                 if (dictionaryCost.ContainsKey(cost.DebtorId))
                 {
                     var valueToPay = dictionaryCost[cost.DebtorId];
-                    valueToPay =+ cost.Value;
+                    valueToPay = valueToPay + cost.Value;
                     dictionaryCost[cost.DebtorId] = valueToPay;
                 }
                 else
@@ -144,12 +145,12 @@ namespace CostEventManegement.EventModule.Services
                 if (dictionaryCost.ContainsKey(cost.PayerId))
                 {
                     var valueToPay = dictionaryCost[cost.PayerId];
-                    valueToPay = +cost.Value;
+                    valueToPay = valueToPay - cost.Value;
                     dictionaryCost[cost.PayerId] = valueToPay;
                 }
                 else
                 {
-                    dictionaryCost.Add(cost.PayerId, cost.Value);
+                    dictionaryCost.Add(cost.PayerId, -cost.Value);
                 }
             }
 
@@ -160,10 +161,24 @@ namespace CostEventManegement.EventModule.Services
 
         public async Task<List<EventDTO>> GetUserEvents(int userId)
         {
-            return await _context.Events.Include(x => x.DefaultCurrency).Include(x => x.EventUsers).ThenInclude(x => x.User).Where(x => x.EventUsers.Any(x => x.UserId == userId)).Select(x => new EventDTO() { Name = x.Name, Code = x.Code, Id = x.Id, DefaultCurrencyId = x.DefaultCurrencyId, DefaultCurrencyCode = x.DefaultCurrency.Name, Users = x.EventUsers.Where(x => x.UserId != userId).Select(x => new SimpleUserVM { Name = x.User.Name + " " + x.User.Surname, Id = x.User.Id }).ToList() }).ToListAsync();
+            return await _context
+                .Events
+                .Include(x => x.DefaultCurrency)
+                .Include(x => x.EventUsers)
+                    .ThenInclude(x => x.User)
+                .Where(x => x.EventUsers.Any(x => x.UserId == userId))
+                .Select(x => new EventDTO()
+                    {
+                        Name = x.Name,
+                        Code = x.Code, Id = x.Id,
+                        DefaultCurrencyId = x.DefaultCurrencyId,
+                        DefaultCurrencyCode = x.DefaultCurrency.Name,
+                        Users = x.EventUsers.Where(x => x.UserId != userId).Select(x => new SimpleUserVM { Name = x.User.Name + " " + x.User.Surname, Id = x.User.Id
+                     }).ToList() })
+                .ToListAsync();
         }
 
-        public void SettleUser(SettleUserEvent settleUserModel)
+        public async Task SettleUser(SettleUserEvent settleUserModel)
         {
             var firstCostsToRemove = _context.UserCosts.Include(x => x.Cost).Where(x => x.Cost.EventId == settleUserModel.EventId && x.DebtorId == settleUserModel.FirstUserId && x.PayerId == settleUserModel.SecondUserId);
             _context.RemoveRange(firstCostsToRemove);
@@ -171,7 +186,7 @@ namespace CostEventManegement.EventModule.Services
             var secondCostsToRemove = _context.UserCosts.Include(x => x.Cost).Where(x => x.Cost.EventId == settleUserModel.EventId && x.DebtorId == settleUserModel.SecondUserId && x.PayerId == settleUserModel.FirstUserId);
             _context.RemoveRange(secondCostsToRemove);
 
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<double> GetCurrentCurrenciesExchange(int fromCurrencyId, int toCurrencyId)

@@ -35,12 +35,6 @@ namespace CostEventManagementAPI.Controllers
             await _eventSerice.AddCost(costModel);
         }
 
-        [HttpPost("EditEvent")]
-        public async Task<int> EditEvent(EventDTO eventModel)
-        {
-            return 1; 
-        }
-
         [HttpGet("JoinToEvent")]
         public async Task<int> JoinToEvent(string eventCode)
         {
@@ -67,21 +61,16 @@ namespace CostEventManagementAPI.Controllers
         }
 
         [HttpPost("SettleUser")]
-        public async Task<EventDTO> SettleUser(int userId)
+        public async Task SettleUser(SettleUserEvent model)
         {
-            return null;
+            model.SecondUserId = GetUserId();
+            await _eventSerice.SettleUser(model);
         }
 
         [HttpGet("GetCurrenciesExchange")]
         public async Task<double> GetCurrenciesExchange(int from, int to)
         {
             return await _eventSerice.GetCurrentCurrenciesExchange(from, to);
-        }
-
-        [HttpPost("AddReceipt")]
-        public async Task<EventDTO> AddReceipt(int userId)
-        {
-            return null;
         }
 
         private int GetUserId() 

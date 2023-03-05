@@ -14,7 +14,7 @@ namespace CostEventManegement.EventModule.Services
         public Task<EventVM> GetEvent(int id, int userId);
         public Task<List<EventDTO>> GetUserEvents(int userId);
         public Task AddCost(CostDTO costDTO);
-        public void SettleUser(SettleUserEvent settleUserModel);
+        public Task SettleUser(SettleUserEvent settleUserModel);
         public Task<int> JoinToEvent(string eventCode, int userId);
         public double GetCurrencyExchange(int currencyId);
         public Task<double> GetCurrentCurrenciesExchange(int fromCurrencyId, int toCurrencyId);
