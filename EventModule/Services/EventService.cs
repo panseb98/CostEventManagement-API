@@ -192,8 +192,7 @@ namespace CostEventManegement.EventModule.Services
 
         public async Task<double> GetCurrentCurrenciesExchange(int fromCurrencyId, int toCurrencyId)
         {
-            NumberFormatInfo provider = new NumberFormatInfo();
-            provider.NumberDecimalSeparator = ",";
+            CultureInfo culture = new CultureInfo("pl"); // I'm assuming german here.
 
             using HttpClient client = new();
             var fromCurrency = await _context.Currencies.FirstOrDefaultAsync(x => x.Id == fromCurrencyId);
@@ -222,7 +221,7 @@ namespace CostEventManegement.EventModule.Services
                     var result = nodeCollections.First().InnerHtml.Replace(".", ",");
                     _context.Logs.Add(new Log() { LogBody = result, Method = "GetCurrentCurrenciesExchange" });
                     await _context.SaveChangesAsync();
-                    var hh = Convert.ToDouble(result, provider);
+                    var hh = Convert.ToDouble(result, culture);
 
                     _context.Logs.Add(new Log() { LogBody = hh.ToString(), Method = "GetCurrentCurrenciesExchange" });
                     await _context.SaveChangesAsync();
