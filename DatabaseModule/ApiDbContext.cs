@@ -24,6 +24,6 @@ namespace CostEventManegement.DatabaseModule
         public DbSet<EventUser> EventUsers { get; set; }
         public DbSet<Cost> Costs { get; set; }
         public DbSet<UserCost> UserCosts { get; set; }
-
+        public DbSet<Log> Logs { get; set; }
     }
 }

@@ -216,6 +216,8 @@ namespace CostEventManegement.EventModule.Services
                 {
                     var nodeCollections = htmlDoc.DocumentNode.SelectNodes($"//span[contains(@id, 'aq_{currenciesCode.ToLower()}_c')]");
                     var result = nodeCollections.First().InnerHtml.Replace(".", ",");
+                    _context.Logs.Add(new Log() { LogBody = result, Method = "GetCurrentCurrenciesExchange" });
+                    await _context.SaveChangesAsync();
                     return Convert.ToDouble(result);
                 }
             }
