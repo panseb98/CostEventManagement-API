@@ -218,7 +218,11 @@ namespace CostEventManegement.EventModule.Services
                     var result = nodeCollections.First().InnerHtml.Replace(".", ",");
                     _context.Logs.Add(new Log() { LogBody = result, Method = "GetCurrentCurrenciesExchange" });
                     await _context.SaveChangesAsync();
-                    return Convert.ToDouble(result);
+                    var hh = Convert.ToDouble(result);
+
+                    _context.Logs.Add(new Log() { LogBody = hh.ToString(), Method = "GetCurrentCurrenciesExchange" });
+                    await _context.SaveChangesAsync();
+                    return hh;
                 }
             }
 
