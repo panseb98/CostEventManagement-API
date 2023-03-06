@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -191,6 +192,9 @@ namespace CostEventManegement.EventModule.Services
 
         public async Task<double> GetCurrentCurrenciesExchange(int fromCurrencyId, int toCurrencyId)
         {
+            NumberFormatInfo provider = new NumberFormatInfo();
+            provider.NumberDecimalSeparator = ",";
+
             using HttpClient client = new();
             var fromCurrency = await _context.Currencies.FirstOrDefaultAsync(x => x.Id == fromCurrencyId);
             var toCurrency = await _context.Currencies.FirstOrDefaultAsync(x => x.Id == toCurrencyId);
@@ -218,11 +222,11 @@ namespace CostEventManegement.EventModule.Services
                     var result = nodeCollections.First().InnerHtml.Replace(".", ",");
                     _context.Logs.Add(new Log() { LogBody = result, Method = "GetCurrentCurrenciesExchange" });
                     await _context.SaveChangesAsync();
-                    var hh = Convert.ToDouble(result);
+                    var hh = Convert.ToDouble(result, provider);
 
                     _context.Logs.Add(new Log() { LogBody = hh.ToString(), Method = "GetCurrentCurrenciesExchange" });
                     await _context.SaveChangesAsync();
-                    return hh;
+                    return hh;  
                 }
             }
 
